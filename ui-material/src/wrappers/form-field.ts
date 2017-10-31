@@ -1,4 +1,4 @@
-import { Component, ViewChild, ViewContainerRef, OnInit, OnDestroy, NgZone, Renderer2 } from '@angular/core';
+import { Component, ViewChild, ViewContainerRef, OnInit, AfterViewInit, ElementRef, OnDestroy, NgZone, Renderer2 } from '@angular/core';
 import { FieldWrapper } from '../../../core';
 import { MatFormField } from '@angular/material/form-field';
 import { MatFormFieldControl } from '@angular/material/form-field';
@@ -10,22 +10,20 @@ import { takeUntil } from 'rxjs/operator/takeUntil';
 @Component({
   selector: 'formly-wrapper-mat-form-field',
   template: `
-    <!-- fix https://github.com/angular/material2/pull/7083 by setting width to 100% -->
     <mat-form-field [floatPlaceholder]="to.floatPlaceholder" [style.width]="'100%'">
       <ng-container #fieldComponent></ng-container>
       <mat-placeholder *ngIf="to.placeholder">{{ to.placeholder }}</mat-placeholder>
-      <!-- fix https://github.com/angular/material2/issues/7737 by setting id to null  -->
       <mat-error [id]="null">
         <formly-validation-message [fieldForm]="formControl" [field]="field"></formly-validation-message>
       </mat-error>
-      <!-- fix https://github.com/angular/material2/issues/7737 by setting id to null  -->
       <mat-hint *ngIf="to.description" [id]="null">{{ to.description }}</mat-hint>
     </mat-form-field>
   `,
   providers: [{ provide: MatFormFieldControl, useExisting: FormlyWrapperFormField }],
 })
-export class FormlyWrapperFormField extends FieldWrapper implements OnInit, OnDestroy, MatFormFieldControl<any> {
+export class FormlyWrapperFormField extends FieldWrapper implements OnInit, AfterViewInit, OnDestroy, MatFormFieldControl<any> {
   @ViewChild('fieldComponent', { read: ViewContainerRef }) fieldComponent: ViewContainerRef;
+  // @ViewChild('.mat-form-field-underline', { read: ViewContainerRef }) fieldComponent: ViewContainerRef;  
   @ViewChild(MatFormField) formField: MatFormField;
 
   placeholder: string;
@@ -56,7 +54,7 @@ export class FormlyWrapperFormField extends FieldWrapper implements OnInit, OnDe
 
   private destroy$ = new Subject<void>();
 
-  constructor(private _focusMonitor: FocusMonitor, private ngZone: NgZone, private renderer: Renderer2) {
+  constructor(private _focusMonitor: FocusMonitor, private ngZone: NgZone, private renderer: Renderer2, private elementRef: ElementRef) {
     super();
   }
 
@@ -64,6 +62,13 @@ export class FormlyWrapperFormField extends FieldWrapper implements OnInit, OnDe
     this.focused = !!this.field.focus;
     this.formField._control = this;
     this.field['__formField__'] = this.formField;
+  }
+
+  ngAfterViewInit() {
+    if (this.field.type === 'checkbox' || this.field.type === 'multicheckbox' || this.field.type === 'radio') {
+      var underline = this.elementRef.nativeElement.querySelector('.mat-form-field-underline')
+      underline.remove();
+    }
   }
 
   focusMonitor(elements = []) {
