@@ -24,5 +24,8 @@ import { FormlyValidationMessage } from './formly.validation-message';
     MatCheckboxModule,
     FormlyModule.forRoot(MATERIAL_FORMLY_CONFIG),
   ],
+  exports:[
+    FormlyValidationMessage
+  ]
 })
 export class FormlyMaterialModule {}
