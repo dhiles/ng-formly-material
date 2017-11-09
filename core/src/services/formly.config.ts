@@ -15,6 +15,9 @@ export class FormlyConfig {
     'formly-group': {
       name: 'formly-group',
       component: FormlyGroup,
+      elementAttributes: {
+        layout: 'row'
+      }
     },
   };
   validators: {[name: string]: ValidatorOption} = {};
@@ -74,6 +77,7 @@ export class FormlyConfig {
       this.types[options.name].component = options.component;
       this.types[options.name].name = options.name;
       this.types[options.name].extends = options.extends;
+      this.types[options.name].elementAttributes = options.elementAttributes;
       this.types[options.name].defaultOptions = options.defaultOptions;
       if (options.wrappers) {
         options.wrappers.map((wrapper) => this.setTypeWrapper(options.name, wrapper));
@@ -190,6 +194,7 @@ export interface TypeOption {
   wrappers?: string[];
   extends?: string;
   defaultOptions?: FormlyFieldConfig;
+  elementAttributes?: any;
 }
 
 export interface WrapperOption {

@@ -10,7 +10,10 @@ import { takeUntil } from 'rxjs/operator/takeUntil';
 @Component({
   selector: 'formly-wrapper-mat-form-field',
   template: `
-    <mat-form-field [floatPlaceholder]="to.floatPlaceholder" [style.width]="'100%'">
+    <mat-form-field 
+    [fxFlex]="to.fxFlex ? to.fxFlex : null" 
+    [fxFlexOffset]="to.fxFlexOffset ? to.fxFlexOffset : null" 
+    [floatPlaceholder]="to.floatPlaceholder" [style.width]="'100%'">
       <ng-container #fieldComponent></ng-container>
       <mat-placeholder *ngIf="to.placeholder">{{ to.placeholder }}</mat-placeholder>
       <mat-error [id]="null">

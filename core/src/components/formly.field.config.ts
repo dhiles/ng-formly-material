@@ -8,6 +8,7 @@ export interface FormlyFieldConfig {
   name?: string;
   templateOptions?: FormlyTemplateOptions;
   optionsTypes?: string[];
+  elementAttributes?: any;
   validation?: {
     messages?: {
       [messageProperties: string]: string | Function;
